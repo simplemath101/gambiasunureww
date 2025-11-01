@@ -3,1084 +3,718 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gambia Quiz Speed Test</title>
+    <title>AI Crypto Signal Analyzer</title>
     <style>
-        :root {
-            --primary-color: #3B7A57; /* Gambian green */
-            --secondary-color: #4d9769;
-            --accent-color: #ce1126; /* Gambian red */
-            --correct-color: #4caf50;
-            --incorrect-color: #f44336;
-            --timer-bg: #e0e0e0;
-            --white: #ffffff;
-            --dark: #333333;
-            --gray: #808080;
-            --light-gray: #f5f5f5;
-        }
-
         * {
-            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            box-sizing: border-box;
         }
 
         body {
-            background-color: var(--light-gray);
-            color: var(--dark);
-            line-height: 1.6;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
         }
 
         .container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
             max-width: 800px;
-            margin: 2rem auto;
-            padding: 2rem;
-            background-color: var(--white);
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            padding: 40px;
+            animation: fadeIn 0.5s ease-in;
         }
 
-        header {
-            text-align: center;
-            margin-bottom: 2rem;
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         h1 {
-            color: var(--primary-color);
-            margin-bottom: 0.5rem;
+            color: #333;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 2em;
         }
 
-        .topic-selection {
-            margin-bottom: 2rem;
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 0.9em;
+        }
+
+        .input-section {
+            margin-bottom: 30px;
         }
 
         label {
             display: block;
-            margin-bottom: 0.5rem;
-            font-weight: bold;
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 10px;
         }
 
-        select {
+        textarea {
             width: 100%;
-            padding: 0.75rem;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 1rem;
-            background-color: var(--white);
-            cursor: pointer;
-        }
-
-        .btn {
-            display: inline-block;
-            padding: 0.75rem 1.5rem;
-            background-color: var(--primary-color);
-            color: var(--white);
-            border: none;
-            border-radius: 5px;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        .btn:hover {
-            background-color: var(--secondary-color);
-        }
-
-        .btn-start {
-            display: block;
-            width: 100%;
-            margin-top: 1rem;
-            font-weight: bold;
-            font-size: 1.1rem;
-        }
-
-        .quiz-container {
-            display: none;
-        }
-
-        .question-container {
-            margin-bottom: 1.5rem;
-        }
-
-        .timer-container {
-            margin-bottom: 1rem;
-        }
-
-        .timer-bar {
-            height: 10px;
-            width: 100%;
-            background-color: var(--timer-bg);
-            border-radius: 5px;
-            overflow: hidden;
-        }
-
-        .timer-progress {
-            height: 100%;
-            width: 100%;
-            background-color: var(--primary-color);
-            transition: width 1s linear;
-        }
-
-        .question {
-            margin-bottom: 1rem;
-            font-size: 1.2rem;
-            font-weight: bold;
-        }
-
-        .options {
-            list-style-type: none;
-        }
-
-        .option {
-            padding: 0.75rem;
-            margin-bottom: 0.5rem;
-            background-color: var(--light-gray);
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.2s ease;
-        }
-
-        .option:hover {
-            background-color: #e8e8e8;
-        }
-
-        .option.correct {
-            background-color: var(--correct-color);
-            color: var(--white);
-        }
-
-        .option.incorrect {
-            background-color: var(--incorrect-color);
-            color: var(--white);
-        }
-
-        .feedback {
-            margin-top: 1rem;
-            padding: 0.75rem;
-            border-radius: 5px;
-            text-align: center;
-            font-weight: bold;
-        }
-
-        .correct-feedback {
-            background-color: rgba(76, 175, 80, 0.2);
-            color: var(--correct-color);
-        }
-
-        .incorrect-feedback {
-            background-color: rgba(244, 67, 54, 0.2);
-            color: var(--incorrect-color);
-        }
-
-        .question-counter {
-            text-align: center;
-            margin-bottom: 1rem;
-            font-weight: bold;
-        }
-
-        .results {
-            display: none;
-            text-align: center;
-        }
-
-        .score {
-            font-size: 2rem;
-            font-weight: bold;
-            margin-bottom: 1rem;
-            color: var(--primary-color);
-        }
-
-        .restart-btn {
-            margin-top: 1rem;
-        }
-
-        .blurred-option {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
-
-        .upgrade-message {
-            display: none;
-            text-align: center;
-            padding: 1rem;
-            margin-top: 1rem;
-            background-color: rgba(206, 17, 38, 0.2);
-            border: 1px solid var(--accent-color);
-            border-radius: 5px;
-            font-weight: bold;
-            color: #ce1126;
-        }
-
-        /* Add styles for popup ad */
-        .popup-ad {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100vh;
-            background: rgba(0, 0, 0, 0.95);
-            color: white;
-            text-align: center;
-            z-index: 9999;
-            text-decoration: none;
-            padding: 0;
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .popup-content {
-            width: 100%;
-            max-width: 400px;
-            padding: 20px;
-            margin: 0 auto;
-        }
-
-        .popup-ad h3 {
-            color: white;
-            font-size: 24px;
-            margin: 20px 0;
-        }
-
-        .popup-ad p {
-            color: white;
-            font-size: 18px;
-            margin: 15px 0;
-        }
-
-        .popup-ad .cta-button {
-            display: inline-block;
-            padding: 15px 30px;
-            background: #3B7A57;
-            color: white;
-            font-weight: bold;
-            border-radius: 5px;
-            margin: 20px 0;
-            font-size: 18px;
-            width: 80%;
-            max-width: 300px;
-        }
-
-        .popup-ad .countdown {
-            margin-top: 20px;
-            font-weight: bold;
-            color: #ffc107;
-            font-size: 16px;
-        }
-
-        .close-button {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            color: white;
-            font-size: 24px;
-            cursor: pointer;
-            background: none;
-            border: none;
-            padding: 5px;
-        }
-
-        /* Add styles for share functionality */
-        .share-container {
-            background-color: #f4f4f4;
-            border-radius: 8px;
-            padding: 20px;
-            margin-top: 20px;
-            text-align: center;
-        }
-
-        .share-progress {
-            width: 100%;
-            background-color: #e0e0e0;
+            padding: 15px;
+            border: 2px solid #ddd;
             border-radius: 10px;
-            margin: 15px 0;
-            overflow: hidden;
+            font-size: 14px;
+            resize: vertical;
+            min-height: 120px;
+            transition: border-color 0.3s ease;
         }
 
-        .share-progress-bar {
-            width: 0%;
-            height: 20px;
-            background-color: #4CAF50;
-            transition: width 0.5s ease;
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
         }
 
-        .telegram-share-btn {
-            background-color: #2eaade;
+        .example-hint {
+            font-size: 0.85em;
+            color: #888;
+            margin-top: 5px;
+            font-style: italic;
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             border: none;
-            padding: 12px 24px;
-            border-radius: 6px;
-            font-weight: bold;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
             cursor: pointer;
-            margin: 10px 0;
-            transition: background-color 0.3s;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
 
-        .telegram-share-btn:hover {
-            background-color: #239ac4;
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
         }
 
-        .telegram-share-btn:disabled {
-            background-color: #cccccc;
-            cursor: not-allowed;
+        button:active {
+            transform: translateY(0);
         }
 
-        .share-instructions {
-            color: #666;
+        .result-section {
+            margin-top: 30px;
+            padding: 25px;
+            border-radius: 15px;
+            background: #f8f9fa;
+            display: none;
+            animation: slideIn 0.4s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .signal-badge {
+            display: inline-block;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: 700;
+            font-size: 1.2em;
             margin-bottom: 15px;
         }
 
-        /* Add styles for answers summary */
-        .answers-section {
-            margin: 20px 0;
-            padding: 15px;
+        .buy-signal {
+            background: #10b981;
+            color: white;
+        }
+
+        .sell-signal {
+            background: #ef4444;
+            color: white;
+        }
+
+        .neutral-signal {
+            background: #f59e0b;
+            color: white;
+        }
+
+        .result-item {
+            margin: 15px 0;
+            padding: 12px;
+            background: white;
             border-radius: 8px;
+            border-left: 4px solid #667eea;
         }
 
-        #correct-answers {
-            background-color: #e8f5e9;
+        .result-label {
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 5px;
         }
 
-        #wrong-answers {
-            background-color: #ffebee;
-        }
-
-        .answers-section h4 {
-            margin-bottom: 10px;
+        .result-value {
             color: #333;
+            font-size: 1.1em;
         }
 
-        .answers-section ul {
-            list-style-type: none;
-            padding: 0;
+        .confidence-bar {
+            width: 100%;
+            height: 25px;
+            background: #e5e7eb;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-top: 8px;
         }
 
-        .answers-section li {
-            padding: 8px;
-            margin: 5px 0;
-            border-radius: 4px;
-            background-color: white;
+        .confidence-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #10b981 0%, #059669 100%);
+            transition: width 1s ease-out;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 0.85em;
         }
 
-        .gambia-flag {
-            width: 60px;
-            height: 40px;
-            display: inline-block;
-            margin: 0 10px;
-            background: linear-gradient(to bottom, #ce1126 30%, #ffffff 30%, #ffffff 70%, #3B7A57 70%);
-            border: 1px solid #ddd;
+        .chart-container {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        canvas {
+            max-width: 100%;
+            border-radius: 10px;
+            background: white;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .pattern-description {
+            margin-top: 15px;
+            padding: 15px;
+            background: #eff6ff;
+            border-radius: 8px;
+            border-left: 4px solid #3b82f6;
+            font-size: 0.9em;
+            color: #1e40af;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 25px;
+            }
+
+            h1 {
+                font-size: 1.5em;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <header>
-            <h1>Gambia Quiz Speed Test <span class="gambia-flag"></span></h1>
-            <p>Test your knowledge about The Gambia with this timed quiz!</p>
-        </header>
+        <h1>🤖 AI Crypto Signal Analyzer</h1>
+        <p class="subtitle">Paste your trading signal and let AI analyze the pattern</p>
 
-        <div class="topic-selection" id="topicSelection">
-            <label for="topic">Select a Topic:</label>
-            <select id="topic">
-                <option value="">-- Select a topic --</option>
-                <option value="history">Gambian History</option>
-                <option value="culture">Culture & Traditions</option>
-                <option value="geography">Geography & Environment</option>
-                <option value="politics" class="blurred-option">Politics & Government</option>
-                <option value="cuisine" class="blurred-option">Gambian Cuisine</option>
-                <option value="tourism" class="blurred-option">Tourism & Travel</option>
-                <option value="sports" class="blurred-option">Sports & Entertainment</option>
-            </select>
-            <button id="startBtn" class="btn btn-start">Start Quiz</button>
-            <div id="upgradeMessage" class="upgrade-message">UPGRADE TO PRO</div>
+        <div class="input-section">
+            <label for="signalInput">Trading Signal:</label>
+            <textarea 
+                id="signalInput" 
+                placeholder="Example: BTC/USDT long entry at 64200, resistance at 64500, support at 63800, bullish flag pattern forming, breakout expected, SL 64000, TP 65000"
+            ></textarea>
+            <p class="example-hint">Tip: Include keywords like "long", "short", "bullish", "bearish", pattern names, support/resistance levels</p>
         </div>
 
-        <div id="quizContainer" class="quiz-container">
-            <div class="question-counter" id="questionCounter">Question 1 of 10</div>
-            <div class="timer-container">
-                <div class="timer-bar">
-                    <div class="timer-progress" id="timerProgress"></div>
-                </div>
-            </div>
-            <div class="question-container">
-                <div class="question" id="question"></div>
-                <ul class="options" id="options"></ul>
-                <div class="feedback" id="feedback"></div>
-            </div>
-        </div>
+        <button onclick="analyzeSignal()">🔍 Analyze Signal</button>
 
-        <div id="results" class="results">
-            <h2>Quiz Completed!</h2>
-            <p>Your score:</p>
-            <div class="score" id="score">**</div>
+        <div id="resultSection" class="result-section">
+            <div id="signalBadge"></div>
             
-            <div class="share-container">
-                <h3>Share and Unlock Full Score!</h3>
-                <p class="share-instructions">Share the quiz with friends to reveal your complete results!</p>
-                
-                <div class="share-progress">
-                    <div class="share-progress-bar" id="share-progress-bar"></div>
-                </div>
-                
-                <p id="share-count-text">Shares: 0/5</p>
-                
-                <button id="telegram-share-btn" class="telegram-share-btn">
-                    Share on Telegram
-                </button>
-                
-                <button id="reveal-score-btn" class="btn" disabled>
-                    Reveal Full Score
-                </button>
+            <div class="result-item">
+                <div class="result-label">Detected Pattern:</div>
+                <div class="result-value" id="patternName"></div>
             </div>
-            
-            <div id="answers-summary" style="display: none;">
-                <h3>Your Answers Summary</h3>
-                <div id="correct-answers" class="answers-section">
-                    <h4>Correct Answers: <span id="correct-count">0</span></h4>
-                    <ul id="correct-list"></ul>
-                </div>
-                <div id="wrong-answers" class="answers-section">
-                    <h4>Incorrect Answers: <span id="wrong-count">0</span></h4>
-                    <ul id="wrong-list"></ul>
+
+            <div class="result-item">
+                <div class="result-label">Confidence Level:</div>
+                <div class="confidence-bar">
+                    <div id="confidenceFill" class="confidence-fill">0%</div>
                 </div>
             </div>
-            
-            <p id="timeStats"></p>
-            <button id="restartBtn" class="btn restart-btn" style="display: none;">Take Another Quiz</button>
+
+            <div class="result-item">
+                <div class="result-label">Analysis Summary:</div>
+                <div class="result-value" id="analysisSummary"></div>
+            </div>
+
+            <div id="patternDescription" class="pattern-description"></div>
+
+            <div class="chart-container">
+                <canvas id="patternChart" width="400" height="200"></canvas>
+            </div>
         </div>
     </div>
 
-    <!-- Add popup ad HTML -->
-    <a id="popupAd" class="popup-ad" href="https://gambiaquiz.com/pro" target="_blank">
-        <button class="close-button" onclick="closePopup(event)">✕</button>
-        <div class="popup-content">
-            <h3>🚀 Upgrade to Gambia Quiz Pro!</h3>
-            <p><strong>Unlock More Features:</strong> Get access to all Gambia Quiz Topics, advanced analytics, and exclusive rewards!</p>
-            <p>Join the Pro Version now and become a Gambia expert! 🚀</p>    
-            <div class="cta-button">
-                CLICK HERE TO UPGRADE
-            </div>
-            <p id="countdown" class="countdown">Click X at the top right to close this Popup</p>
-        </div>
-    </a>
-
     <script>
-        // DOM elements
-const topicSelectionEl = document.getElementById('topicSelection');
-const topicSelectEl = document.getElementById('topic');
-const startBtn = document.getElementById('startBtn');
-const upgradeMessageEl = document.getElementById('upgradeMessage');
-const quizContainerEl = document.getElementById('quizContainer');
-const questionCounterEl = document.getElementById('questionCounter');
-const questionEl = document.getElementById('question');
-const optionsEl = document.getElementById('options');
-const feedbackEl = document.getElementById('feedback');
-const timerProgressEl = document.getElementById('timerProgress');
-const resultsEl = document.getElementById('results');
-const scoreEl = document.getElementById('score');
-const timeStatsEl = document.getElementById('timeStats');
-const restartBtn = document.getElementById('restartBtn');
+        // Pattern Database with keywords and characteristics
+        const patternDatabase = {
+            // Bullish Continuation Patterns
+            bullishFlag: {
+                name: "Bullish Flag",
+                type: "continuation",
+                signal: "buy",
+                keywords: ["flag", "bullish flag", "consolidation", "uptrend", "pole"],
+                description: "A short consolidation after a strong upward move, suggesting continuation upward.",
+                strength: 0.8
+            },
+            bullishPennant: {
+                name: "Bullish Pennant",
+                type: "continuation",
+                signal: "buy",
+                keywords: ["pennant", "bullish pennant", "triangle", "converging"],
+                description: "Similar to a flag but with converging trendlines, indicating bullish continuation.",
+                strength: 0.75
+            },
+            ascendingTriangle: {
+                name: "Ascending Triangle",
+                type: "continuation",
+                signal: "buy",
+                keywords: ["ascending triangle", "horizontal resistance", "higher lows"],
+                description: "Flat top with rising support, typically breaks upward.",
+                strength: 0.85
+            },
+            cupAndHandle: {
+                name: "Cup with Handle",
+                type: "continuation",
+                signal: "buy",
+                keywords: ["cup", "handle", "cup and handle", "rounded bottom"],
+                description: "U-shaped pattern followed by slight consolidation, very bullish.",
+                strength: 0.9
+            },
 
-// Quiz state
-let currentQuestionIndex = 0;
-let score = 0;
-let timer;
-let timeLeft = 60;
-let questions = [];
-let startTime, endTime;
-let answeredQuestions = 0;
-let totalTimeUsed = 0;
-let userAnswers = [];
-let quizScore = 0;
-let shareCount = 0;
-let popupTimer; // Added variable to track popup timer
+            // Bearish Continuation Patterns
+            bearishFlag: {
+                name: "Bearish Flag",
+                type: "continuation",
+                signal: "sell",
+                keywords: ["bearish flag", "downtrend", "bear flag", "consolidation down"],
+                description: "Brief upward consolidation in a downtrend, suggesting further decline.",
+                strength: 0.8
+            },
+            bearishPennant: {
+                name: "Bearish Pennant",
+                type: "continuation",
+                signal: "sell",
+                keywords: ["bearish pennant", "bear pennant", "converging down"],
+                description: "Converging pattern in downtrend, indicating continued selling.",
+                strength: 0.75
+            },
+            descendingTriangle: {
+                name: "Descending Triangle",
+                type: "continuation",
+                signal: "sell",
+                keywords: ["descending triangle", "horizontal support", "lower highs"],
+                description: "Flat bottom with declining resistance, typically breaks downward.",
+                strength: 0.85
+            },
 
-// Additional DOM elements for new functionality
-const telegramShareBtn = document.getElementById('telegram-share-btn');
-const revealScoreBtn = document.getElementById('reveal-score-btn');
-const shareProgressBar = document.getElementById('share-progress-bar');
-const shareCountText = document.getElementById('share-count-text');
-const answersSummary = document.getElementById('answers-summary');
+            // Bullish Reversal Patterns
+            doubleBottom: {
+                name: "Double Bottom",
+                type: "reversal",
+                signal: "buy",
+                keywords: ["double bottom", "w pattern", "two bottoms", "reversal up"],
+                description: "Two consecutive lows at similar levels, indicating bullish reversal.",
+                strength: 0.85
+            },
+            tripleBottom: {
+                name: "Triple Bottom",
+                type: "reversal",
+                signal: "buy",
+                keywords: ["triple bottom", "three bottoms", "multiple support"],
+                description: "Three lows at similar levels, strong bullish reversal signal.",
+                strength: 0.9
+            },
+            invertedHeadAndShoulders: {
+                name: "Inverted Head and Shoulders",
+                type: "reversal",
+                signal: "buy",
+                keywords: ["inverted head and shoulders", "head shoulders bottom", "reverse head"],
+                description: "Three troughs with middle being lowest, powerful bullish reversal.",
+                strength: 0.95
+            },
+            fallingWedge: {
+                name: "Falling Wedge",
+                type: "reversal",
+                signal: "buy",
+                keywords: ["falling wedge", "wedge down", "converging lower"],
+                description: "Converging trendlines sloping downward, bullish breakout expected.",
+                strength: 0.8
+            },
 
-// Questions bank
-const questionsBank = {
-    history: [
-        {
-            question: "In what year did The Gambia gain independence from British colonial rule?",
-            options: ["1965", "1975", "1960", "1970"],
-            correctAnswer: 0
-        },
-        {
-            question: "Who was the first president of The Gambia?",
-            options: ["Dawda Jawara", "Yahya Jammeh", "Adama Barrow", "Bakary Dabo"],
-            correctAnswer: 0
-        },
-        {
-            question: "What was the name of the political union between Senegal and The Gambia that existed from 1982 to 1989?",
-            options: ["Senegambia Confederation", "Gambia-Senegal Alliance", "West African Union", "Senegambia Republic"],
-            correctAnswer: 0
-        },
-        {
-            question: "Which former Gambian president came to power through a military coup in 1994?",
-            options: ["Yahya Jammeh", "Dawda Jawara", "Adama Barrow", "Ousainou Darboe"],
-            correctAnswer: 0
-        },
-        {
-            question: "What was the former name of Banjul, the capital city of The Gambia?",
-            options: ["Bathurst", "Georgetown", "St. Mary's", "Albion"],
-            correctAnswer: 0
-        },
-        {
-            question: "Which European explorer is credited with 'discovering' the Gambia River in the 15th century?",
-            options: ["Prince Henry the Navigator", "Christopher Columbus", "Vasco da Gama", "Ferdinand Magellan"],
-            correctAnswer: 0
-        },
-        {
-            question: "Which slave fort is located at the mouth of the Gambia River and played a significant role in the Atlantic slave trade?",
-            options: ["James Island (Kunta Kinteh Island)", "Goree Island", "Cape Coast Castle", "Elmina Castle"],
-            correctAnswer: 0
-        },
-        {
-            question: "In what year did Adama Barrow become president of The Gambia?",
-            options: ["2017", "2015", "2019", "2012"],
-            correctAnswer: 0
-        },
-        {
-            question: "The Gambia River has been an important trading route for centuries. Which product was NOT historically traded along this river?",
-            options: ["Coffee", "Gold", "Ivory", "Slaves"],
-            correctAnswer: 0
-        },
-        {
-            question: "Which military and political alliance helped ensure peaceful transition of power after the 2016 Gambian election crisis?",
-            options: ["ECOWAS", "African Union", "United Nations", "Commonwealth"],
-            correctAnswer: 0
-        },
-        {
-            question: "What famous American author wrote 'Roots', tracing his ancestry to The Gambia?",
-            options: ["Alex Haley", "James Baldwin", "Toni Morrison", "Maya Angelou"],
-            correctAnswer: 0
-        },
-        {
-            question: "Which colonial power briefly controlled parts of The Gambia before British dominance?",
-            options: ["Portugal", "France", "Netherlands", "Spain"],
-            correctAnswer: 0
-        }
-    ],
-    culture: [
-        {
-            question: "What is the dominant religion in The Gambia?",
-            options: ["Islam", "Christianity", "Traditional African Religions", "Buddhism"],
-            correctAnswer: 0
-        },
-        {
-            question: "Which of these is a traditional Gambian musical instrument?",
-            options: ["Kora", "Sitar", "Accordion", "Bagpipes"],
-            correctAnswer: 0
-        },
-        {
-            question: "What is the name of the traditional Gambian wrestling that combines wrestling with mystical rituals?",
-            options: ["Boreh", "Lutte", "Mma", "Capoeira"],
-            correctAnswer: 0
-        },
-        {
-            question: "Which ethnic group is the largest in The Gambia?",
-            options: ["Mandinka", "Fula", "Wolof", "Jola"],
-            correctAnswer: 0
-        },
-        {
-            question: "What colorful outfit is typically worn by Gambian women?",
-            options: ["Complet", "Sari", "Kimono", "Dirndl"],
-            correctAnswer: 0
-        },
-        {
-            question: "Which of these is a traditional Gambian ceremonial dance?",
-            options: ["Kankurang", "Samba", "Tango", "Hula"],
-            correctAnswer: 0
-        },
-        {
-            question: "What is the traditional greeting in Mandinka?",
-            options: ["I be jama?", "Jambo", "Salaam", "Hola"],
-            correctAnswer: 0
-        },
-        {
-            question: "Which traditional Gambian practice involves female storytellers who preserve oral history?",
-            options: ["Griots", "Sangomas", "Oracles", "Nyakures"],
-            correctAnswer: 0
-        },
-        {
-            question: "What is a common traditional musical genre in The Gambia?",
-            options: ["Mbalax", "Reggae", "Samba", "K-Pop"],
-            correctAnswer: 0
-        },
-        {
-            question: "Which traditional craft is The Gambia particularly known for?",
-            options: ["Tie-dye textiles", "Pottery", "Glassblowing", "Metalwork"],
-            correctAnswer: 0
-        },
-        {
-            question: "What is 'attaya', an important social ritual in Gambian culture?",
-            options: ["Tea ceremony", "Wedding dance", "Harvest festival", "New year celebration"],
-            correctAnswer: 0
-        },
-        {
-            question: "Which famous Gambian musician gained international recognition for his kora playing?",
-            options: ["Jaliba Kuyateh", "Youssou N'Dour", "Alpha Blondy", "Baaba Maal"],
-            correctAnswer: 0
-        }
-    ],
-    geography: [
-        {
-            question: "What is the capital city of The Gambia?",
-            options: ["Banjul", "Serekunda", "Brikama", "Bakau"],
-            correctAnswer: 0
-        },
-        {
-            question: "Which country completely surrounds The Gambia except for its coastline?",
-            options: ["Senegal", "Mali", "Guinea-Bissau", "Sierra Leone"],
-            correctAnswer: 0
-        },
-        {
-            question: "What is the length of The Gambia from east to west?",
-            options: ["About 400 km", "About 600 km", "About 200 km", "About 800 km"],
-            correctAnswer: 0
-        },
-        {
-            question: "Which body of water borders The Gambia to the west?",
-            options: ["Atlantic Ocean", "Mediterranean Sea", "Indian Ocean", "Lake Volta"],
-            correctAnswer: 0
-        },
-        {
-            question: "What is the main river that runs through The Gambia?",
-            options: ["Gambia River", "Senegal River", "Niger River", "Volta River"],
-            correctAnswer: 0
-        },
-        {
-            question: "Which of these is NOT one of the administrative divisions of The Gambia?",
-            options: ["Tambacounda", "North Bank", "West Coast", "Central River"],
-            correctAnswer: 0
-        },
-        {
-            question: "What is the approximate population of The Gambia as of 2023?",
-            options: ["2.5 million", "10 million", "5 million", "800,000"],
-            correctAnswer: 0
-        },
-        {
-            question: "Which of these is a popular tourist beach area in The Gambia?",
-            options: ["Kotu", "Dakar", "Accra", "Monrovia"],
-            correctAnswer: 0
-        },
-        {
-            question: "What is the highest point in The Gambia?",
-            options: ["Red Rock (53m)", "Mount Gambia (150m)", "Banjul Peak (90m)", "Senegal Hill (200m)"],
-            correctAnswer: 0
-        },
-        {
-            question: "Which of these is a UNESCO World Heritage site in The Gambia?",
-            options: ["Kunta Kinteh Island", "Banjul Cathedral", "National Museum", "Abuko Nature Reserve"],
-            correctAnswer: 0
-        },
-        {
-            question: "What is the most widely spoken indigenous language in The Gambia?",
-            options: ["Mandinka", "Wolof", "Fula", "Jola"],
-            correctAnswer: 0
-        },
-        {
-            question: "What is the climate type of The Gambia?",
-            options: ["Tropical savanna", "Mediterranean", "Desert", "Humid subtropical"],
-            correctAnswer: 0
-        }
-    ]
-};
+            // Bearish Reversal Patterns
+            doubleTop: {
+                name: "Double Top",
+                type: "reversal",
+                signal: "sell",
+                keywords: ["double top", "m pattern", "two tops", "reversal down"],
+                description: "Two consecutive highs at similar levels, indicating bearish reversal.",
+                strength: 0.85
+            },
+            tripleTop: {
+                name: "Triple Top",
+                type: "reversal",
+                signal: "sell",
+                keywords: ["triple top", "three tops", "multiple resistance"],
+                description: "Three highs at similar levels, strong bearish reversal signal.",
+                strength: 0.9
+            },
+            headAndShoulders: {
+                name: "Head and Shoulders",
+                type: "reversal",
+                signal: "sell",
+                keywords: ["head and shoulders", "head shoulders top", "three peaks"],
+                description: "Three peaks with middle being highest, powerful bearish reversal.",
+                strength: 0.95
+            },
+            risingWedge: {
+                name: "Rising Wedge",
+                type: "reversal",
+                signal: "sell",
+                keywords: ["rising wedge", "wedge up", "converging higher"],
+                description: "Converging trendlines sloping upward, bearish breakdown expected.",
+                strength: 0.8
+            },
 
-// Initialize the quiz
-function init() {
-    // Hide popup initially
-    const popup = document.getElementById("popupAd");
-    if (popup) {
-        popup.style.display = "none";
-    }
-    
-    // Event listeners
-    startBtn.addEventListener('click', startQuiz);
-    restartBtn.addEventListener('click', restartQuiz);
-    topicSelectEl.addEventListener('change', handleTopicChange);
-    
-    // Disable blurred options
-    const blurredOptions = document.querySelectorAll('.blurred-option');
-    blurredOptions.forEach(option => {
-        option.disabled = true;
-        option.addEventListener('click', (e) => {
-            e.preventDefault();
-            upgradeMessageEl.textContent = 'Upgrade to Pro to unlock';
-            upgradeMessageEl.style.display = 'block';
-            topicSelectEl.value = '';
-        });
-    });
-    
-    // Add event listeners for share functionality
-    if (telegramShareBtn && revealScoreBtn) {
-        telegramShareBtn.addEventListener('click', handleShare);
-        revealScoreBtn.addEventListener('click', revealFullScore);
-    }
-    
-    // Add popup event listeners
-    const closeButton = document.querySelector('.close-button');
-    if (closeButton) {
-        closeButton.addEventListener('click', closePopup);
-    }
-    
-    // Start popup timer - wait 55 seconds before first popup
-    popupTimer = setTimeout(() => {
-        showPopup();
-        // Then show every 55 seconds after the first one
-        setInterval(showPopup, 55000);
-    }, 55000);
-}
-
-// Handle topic change
-function handleTopicChange() {
-    const selectedTopic = topicSelectEl.value;
-    const selectedOption = topicSelectEl.options[topicSelectEl.selectedIndex];
-    
-    // Reset upgrade message
-    upgradeMessageEl.style.display = 'none';
-    
-    // Check if selected option is blurred
-    if (selectedOption && selectedOption.classList.contains('blurred-option')) {
-        upgradeMessageEl.textContent = 'Upgrade to Pro to unlock';
-        upgradeMessageEl.style.display = 'block';
-        topicSelectEl.value = ''; // Reset selection
-    }
-}
-
-// Start the quiz
-function startQuiz() {
-    const selectedTopic = topicSelectEl.value;
-    
-    if (!selectedTopic) {
-        alert('Please select a topic first!');
-        return;
-    }
-    
-    // Load questions for selected topic
-    questions = getRandomQuestions(selectedTopic, 10);
-    
-    if (questions.length === 0) {
-        alert('No questions available for this topic!');
-        return;
-    }
-    
-    // Hide topic selection and show quiz
-    topicSelectionEl.style.display = 'none';
-    quizContainerEl.style.display = 'block';
-    
-    // Reset quiz state
-    currentQuestionIndex = 0;
-    score = 0;
-    answeredQuestions = 0;
-    totalTimeUsed = 0;
-    startTime = new Date();
-    
-    // Load first question
-    loadQuestion();
-}
-
-// Get random questions from the bank
-function getRandomQuestions(topic, count) {
-    if (!questionsBank[topic] || questionsBank[topic].length === 0) {
-        return [];
-    }
-    
-    const topicQuestions = [...questionsBank[topic]];
-    const selectedQuestions = [];
-    
-    // Ensure we don't try to get more questions than are available
-    count = Math.min(count, topicQuestions.length);
-    
-    for (let i = 0; i < count; i++) {
-        const randomIndex = Math.floor(Math.random() * topicQuestions.length);
-        selectedQuestions.push(topicQuestions.splice(randomIndex, 1)[0]);
-    }
-    
-    return selectedQuestions;
-}
-
-// Load a question
-function loadQuestion() {
-    if (currentQuestionIndex >= questions.length) {
-        endQuiz();
-        return;
-    }
-    
-    const question = questions[currentQuestionIndex];
-    
-    // Update question counter
-    questionCounterEl.textContent = `Question ${currentQuestionIndex + 1} of ${questions.length}`;
-    
-    // Load question text
-    questionEl.textContent = question.question;
-    
-    // Clear options and feedback
-    optionsEl.innerHTML = '';
-    feedbackEl.innerHTML = '';
-    feedbackEl.className = 'feedback';
-    
-    // Add options
-    question.options.forEach((option, index) => {
-        const li = document.createElement('li');
-        li.textContent = option;
-        li.className = 'option';
-        li.setAttribute('data-index', index);
-        li.addEventListener('click', () => selectAnswer(index));
-        optionsEl.appendChild(li);
-    });
-    
-    // Reset and start timer - Changed from 60 to 15 seconds
-    timeLeft = 15;
-    timerProgressEl.style.width = '100%';
-    clearInterval(timer);
-    startTimer();
-}
-
-// Start the timer
-function startTimer() {
-    timer = setInterval(() => {
-        timeLeft--;
-        
-        // Update timer bar - Changed calculation to be based on 15 seconds
-        const percentage = (timeLeft / 15) * 100;
-        timerProgressEl.style.width = `${percentage}%`;
-        
-        if (timeLeft <= 0) {
-            clearInterval(timer);
-            handleTimeUp();
-        }
-    }, 1000);
-}
-
-// Handle time up
-function handleTimeUp() {
-    // Mark question as timed out
-    feedbackEl.textContent = "Time's up! Moving to next question...";
-    feedbackEl.className = 'feedback incorrect-feedback';
-    
-    // Disable all options
-    const options = document.querySelectorAll('.option');
-    const question = questions[currentQuestionIndex];
-    const correctIndex = question.correctAnswer ?? question.answer;
-    
-    options.forEach(option => {
-        option.style.pointerEvents = 'none';
-        
-        // Highlight correct answer
-        if (parseInt(option.getAttribute('data-index')) === correctIndex) {
-            option.classList.add('correct');
-        }
-    });
-    
-    // Record time used - Changed from 60 to 15 seconds
-    totalTimeUsed += 15;
-    answeredQuestions++;
-    
-    // Store answer with correct answer for timed out questions
-    userAnswers.push({
-        question: question.question,
-        userAnswer: "Time's up",
-        correctAnswer: question.options[correctIndex],
-        isCorrect: false
-    });
-    // Move to next question after 2 seconds
-    setTimeout(nextQuestion, 2000);
-}
-
-function selectAnswer(index) {
-    clearInterval(timer);
-    
-    const correctIndex = questions[currentQuestionIndex].correctAnswer ?? questions[currentQuestionIndex].answer;
-    const isCorrect = index === correctIndex;
-    
-    // Record time used - Changed from 60 to 15 seconds
-    const timeUsed = 15 - timeLeft;
-    totalTimeUsed += timeUsed;
-    answeredQuestions++;
-    
-    // Store answer with correct answer
-    const question = questions[currentQuestionIndex];
-    userAnswers.push({
-        question: question.question,
-        userAnswer: question.options[index],
-        correctAnswer: question.options[correctIndex],
-        isCorrect: isCorrect
-    });
-    
-    // Update score if correct
-    if (isCorrect) {
-        score++;
-    }
-    
-    // Disable options without highlighting
-    const options = document.querySelectorAll('.option');
-    options.forEach(option => {
-        option.style.pointerEvents = 'none';
-    });
-    
-    // Move to next question after 1 second
-    setTimeout(nextQuestion, 1000);
-}
-
-// Move to next question
-function nextQuestion() {
-    currentQuestionIndex++;
-    loadQuestion();
-}
-
-// End the quiz
-function endQuiz() {
-    endTime = new Date();
-    const totalTime = (endTime - startTime) / 1000; // in seconds
-    
-    // Hide quiz container and show results
-    quizContainerEl.style.display = 'none';
-    resultsEl.style.display = 'block';
-    
-    // Store actual score and show masked version
-    quizScore = score;
-    scoreEl.textContent = '**';
-    
-    // Reset share functionality
-    shareCount = 0;
-    shareProgressBar.style.width = '0%';
-    shareCountText.textContent = 'Shares: 0/5';
-    revealScoreBtn.disabled = true;
-    telegramShareBtn.disabled = false;
-    answersSummary.style.display = 'none';
-    restartBtn.style.display = 'none';
-    
-    // Update time stats
-    const avgTimePerQuestion = answeredQuestions > 0 ? (totalTimeUsed / answeredQuestions).toFixed(1) : 0;
-    timeStatsEl.textContent = `Total time: ${totalTime.toFixed(1)} seconds
-                              Average time per question: ${avgTimePerQuestion} seconds`;
-}
-
-// Restart the quiz
-function restartQuiz() {
-    // Hide results and show topic selection
-    resultsEl.style.display = 'none';
-    topicSelectionEl.style.display = 'block';
-    
-    // Reset topic selection
-    topicSelectEl.value = '';
-    upgradeMessageEl.style.display = 'none';
-}
-
-// Function to handle share action
-function handleShare() {
-    // Increment share count
-    shareCount++;
-
-    // Update progress bar and text
-    const progressPercentage = (shareCount / 5) * 100;
-    shareProgressBar.style.width = `${progressPercentage}%`;
-    shareCountText.textContent = `Shares: ${shareCount}/5`;
-
-    // Open Telegram share link
-    const telegramShareMessage = encodeURIComponent(
-        "🇬🇲 99% of people can't get a perfect score on this Gambia quiz! " +
-        "Think you know everything about The Gambia? Test your knowledge now and challenge a friend to beat you! 🌍🔥\n\n" +
-        "CLICK THE LINK FOR THE QUIZ 👇 [https://yourquizlink.com]"
-    );
-    window.open(`https://t.me/share/url?url=${telegramShareMessage}`, '_blank');
-
-    // Enable reveal score button if shares reach 5
-    if (shareCount >= 5) {
-        revealScoreBtn.disabled = false;
-        telegramShareBtn.disabled = true;
-    }
-}
-
-// Function to reveal full score
-function revealFullScore() {
-    scoreEl.textContent = `${quizScore}/${questions.length}`;
-    
-    // Show answers summary
-    const correctList = document.getElementById('correct-list');
-    const wrongList = document.getElementById('wrong-list');
-    const correctCount = document.getElementById('correct-count');
-    const wrongCount = document.getElementById('wrong-count');
-    
-    // Clear previous lists
-    correctList.innerHTML = '';
-    wrongList.innerHTML = '';
-    
-    // Count correct and wrong answers
-    let correctCountNum = 0;
-    let wrongCountNum = 0;
-    
-    // Populate lists
-    userAnswers.forEach(answer => {
-        const li = document.createElement('li');
-        if (answer.isCorrect) {
-            li.textContent = `Q: ${answer.question} | Your Answer: ${answer.userAnswer}`;
-            correctList.appendChild(li);
-            correctCountNum++;
-        } else {
-            li.textContent = `Q: ${answer.question} | Your Answer: ${answer.userAnswer} | Correct Answer: ${answer.correctAnswer}`;
-            wrongList.appendChild(li);
-            wrongCountNum++;
-        }
-    });
-    
-    // Update counts
-    correctCount.textContent = correctCountNum;
-    wrongCount.textContent = wrongCountNum;
-    
-    // Show summary and restart button
-    answersSummary.style.display = 'block';
-    restartBtn.style.display = 'inline-block';
-    
-    alert(`Congratulations! Your full score is ${quizScore}/${questions.length}. Great job completing the Gambia quiz!`);
-    revealScoreBtn.disabled = true;
-}
-
-// Add popup functionality
-function showPopup() {
-    let popup = document.getElementById("popupAd");
-    let countdown = document.getElementById("countdown");
-    let timeLeft = 35;
-    
-    if (popup) {
-        popup.style.display = "flex";
-        
-        let timer = setInterval(() => {
-            timeLeft--;
-            if (countdown) {
-                countdown.innerText = `Closing in ${timeLeft}s`;
+            // Harmonic Patterns
+            gartleyBullish: {
+                name: "Gartley Pattern (Bullish)",
+                type: "harmonic",
+                signal: "buy",
+                keywords: ["gartley", "harmonic", "fibonacci", "xabcd"],
+                description: "Complex harmonic pattern with specific Fibonacci ratios, bullish reversal.",
+                strength: 0.85
+            },
+            batPattern: {
+                name: "Bat Pattern",
+                type: "harmonic",
+                signal: "buy",
+                keywords: ["bat pattern", "bat", "harmonic bat"],
+                description: "Harmonic pattern with precise ratios, indicates potential reversal.",
+                strength: 0.8
+            },
+            butterflyPattern: {
+                name: "Butterfly Pattern",
+                type: "harmonic",
+                signal: "buy",
+                keywords: ["butterfly", "harmonic butterfly"],
+                description: "Extended harmonic pattern suggesting strong reversal potential.",
+                strength: 0.85
             }
-            if (timeLeft <= 0) {
-                clearInterval(timer);
-                popup.style.display = "none";
+        };
+
+        // Keyword scoring system
+        const bullishKeywords = [
+            "long", "buy", "bullish", "uptrend", "higher high", "higher low",
+            "support holding", "breakout", "breakthrough", "rally", "pump",
+            "accumulation", "golden cross", "bounce", "recovery", "strength"
+        ];
+
+        const bearishKeywords = [
+            "short", "sell", "bearish", "downtrend", "lower high", "lower low",
+            "resistance rejection", "breakdown", "dump", "distribution", 
+            "death cross", "rejection", "weakness", "decline", "crash"
+        ];
+
+        const neutralKeywords = [
+            "sideways", "consolidation", "ranging", "neutral", "indecision",
+            "symmetrical", "rectangle", "horizontal"
+        ];
+
+        function analyzeSignal() {
+            const input = document.getElementById('signalInput').value.toLowerCase();
+            
+            if (!input.trim()) {
+                alert('Please enter a trading signal to analyze.');
+                return;
             }
-        }, 1000);
-    }
-}
 
-function closePopup(event) {
-    if (event) {
-        event.preventDefault();
-        event.stopPropagation();
-    }
-    
-    const popup = document.getElementById("popupAd");
-    if (popup) {
-        popup.style.display = "none";
-    }
-}
+            // Analyze the signal
+            const analysis = performAnalysis(input);
+            
+            // Display results
+            displayResults(analysis);
+        }
 
-// Initialize the app
-document.addEventListener('DOMContentLoaded', init);
-</script>
+        function performAnalysis(text) {
+            let detectedPattern = null;
+            let maxScore = 0;
+            let patternMatches = [];
+
+            // Check for pattern keywords
+            for (const [key, pattern] of Object.entries(patternDatabase)) {
+                let score = 0;
+                let matchedKeywords = [];
+
+                for (const keyword of pattern.keywords) {
+                    if (text.includes(keyword)) {
+                        score += 10;
+                        matchedKeywords.push(keyword);
+                    }
+                }
+
+                if (score > 0) {
+                    patternMatches.push({
+                        pattern: pattern,
+                        score: score * pattern.strength,
+                        keywords: matchedKeywords
+                    });
+                }
+            }
+
+            // Sort by score and get best match
+            patternMatches.sort((a, b) => b.score - a.score);
+            
+            // Calculate sentiment scores
+            let bullishScore = 0;
+            let bearishScore = 0;
+
+            for (const keyword of bullishKeywords) {
+                if (text.includes(keyword)) bullishScore += 5;
+            }
+
+            for (const keyword of bearishKeywords) {
+                if (text.includes(keyword)) bearishScore += 5;
+            }
+
+            // Determine final signal
+            let finalSignal;
+            let confidence;
+            let summary;
+
+            if (patternMatches.length > 0) {
+                detectedPattern = patternMatches[0].pattern;
+                finalSignal = detectedPattern.signal;
+                
+                // Combine pattern and sentiment
+                const totalBullish = bullishScore + (finalSignal === 'buy' ? patternMatches[0].score : 0);
+                const totalBearish = bearishScore + (finalSignal === 'sell' ? patternMatches[0].score : 0);
+                
+                confidence = Math.min(95, Math.round((Math.max(totalBullish, totalBearish) / (totalBullish + totalBearish + 1)) * 100));
+                
+                summary = `Pattern detected with ${patternMatches[0].keywords.join(', ')} indicators. ` +
+                         `Bullish signals: ${bullishScore}, Bearish signals: ${bearishScore}.`;
+            } else {
+                // No pattern detected, use sentiment only
+                if (bullishScore > bearishScore) {
+                    finalSignal = 'buy';
+                    confidence = Math.min(75, Math.round((bullishScore / (bullishScore + bearishScore + 1)) * 100));
+                } else if (bearishScore > bullishScore) {
+                    finalSignal = 'sell';
+                    confidence = Math.min(75, Math.round((bearishScore / (bullishScore + bearishScore + 1)) * 100));
+                } else {
+                    finalSignal = 'neutral';
+                    confidence = 50;
+                }
+                
+                summary = `No specific pattern detected. Analysis based on sentiment: Bullish signals: ${bullishScore}, Bearish signals: ${bearishScore}.`;
+            }
+
+            return {
+                signal: finalSignal,
+                confidence: confidence,
+                pattern: detectedPattern,
+                summary: summary
+            };
+        }
+
+        function displayResults(analysis) {
+            const resultSection = document.getElementById('resultSection');
+            const signalBadge = document.getElementById('signalBadge');
+            const patternName = document.getElementById('patternName');
+            const confidenceFill = document.getElementById('confidenceFill');
+            const analysisSummary = document.getElementById('analysisSummary');
+            const patternDescription = document.getElementById('patternDescription');
+
+            // Show result section
+            resultSection.style.display = 'block';
+
+            // Set signal badge
+            let badgeClass, badgeText;
+            if (analysis.signal === 'buy') {
+                badgeClass = 'buy-signal';
+                badgeText = '📈 BUY SIGNAL';
+            } else if (analysis.signal === 'sell') {
+                badgeClass = 'sell-signal';
+                badgeText = '📉 SELL SIGNAL';
+            } else {
+                badgeClass = 'neutral-signal';
+                badgeText = '⚠️ NEUTRAL SIGNAL';
+            }
+            signalBadge.className = 'signal-badge ' + badgeClass;
+            signalBadge.textContent = badgeText;
+
+            // Set pattern name
+            patternName.textContent = analysis.pattern ? analysis.pattern.name : 'No specific pattern detected';
+
+            // Animate confidence bar
+            setTimeout(() => {
+                confidenceFill.style.width = analysis.confidence + '%';
+                confidenceFill.textContent = analysis.confidence + '%';
+            }, 100);
+
+            // Set summary
+            analysisSummary.textContent = analysis.summary;
+
+            // Set pattern description
+            if (analysis.pattern) {
+                patternDescription.textContent = '📊 ' + analysis.pattern.description;
+                patternDescription.style.display = 'block';
+            } else {
+                patternDescription.style.display = 'none';
+            }
+
+            // Draw chart
+            drawPatternChart(analysis);
+        }
+
+        function drawPatternChart(analysis) {
+            const canvas = document.getElementById('patternChart');
+            const ctx = canvas.getContext('2d');
+            
+            // Clear canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Draw based on signal type
+            ctx.strokeStyle = analysis.signal === 'buy' ? '#10b981' : analysis.signal === 'sell' ? '#ef4444' : '#f59e0b';
+            ctx.lineWidth = 3;
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+
+            if (analysis.pattern) {
+                drawSpecificPattern(ctx, analysis.pattern.name, canvas);
+            } else {
+                drawGenericTrend(ctx, analysis.signal, canvas);
+            }
+        }
+
+        function drawSpecificPattern(ctx, patternName, canvas) {
+            const w = canvas.width;
+            const h = canvas.height;
+            const centerY = h / 2;
+
+            ctx.beginPath();
+
+            if (patternName.includes('Flag')) {
+                // Draw flag pattern
+                ctx.moveTo(50, h - 30);
+                ctx.lineTo(150, 30);
+                ctx.lineTo(180, 50);
+                ctx.lineTo(220, 40);
+                ctx.lineTo(260, 55);
+                ctx.lineTo(300, 45);
+                ctx.lineTo(350, 20);
+            } else if (patternName.includes('Triangle')) {
+                // Draw triangle pattern
+                ctx.moveTo(50, centerY + 40);
+                ctx.lineTo(150, centerY - 40);
+                ctx.lineTo(250, centerY + 30);
+                ctx.lineTo(350, centerY);
+            } else if (patternName.includes('Double Bottom')) {
+                // Draw W pattern
+                ctx.moveTo(50, 60);
+                ctx.lineTo(100, h - 40);
+                ctx.lineTo(150, 80);
+                ctx.lineTo(250, h - 40);
+                ctx.lineTo(300, 80);
+                ctx.lineTo(350, 40);
+            } else if (patternName.includes('Double Top')) {
+                // Draw M pattern
+                ctx.moveTo(50, h - 60);
+                ctx.lineTo(100, 40);
+                ctx.lineTo(150, h - 80);
+                ctx.lineTo(250, 40);
+                ctx.lineTo(300, h - 80);
+                ctx.lineTo(350, h - 40);
+            } else if (patternName.includes('Head and Shoulders')) {
+                // Draw head and shoulders
+                if (patternName.includes('Inverted')) {
+                    ctx.moveTo(50, 50);
+                    ctx.lineTo(100, h - 50);
+                    ctx.lineTo(150, 70);
+                    ctx.lineTo(200, h - 80);
+                    ctx.lineTo(250, 70);
+                    ctx.lineTo(300, h - 50);
+                    ctx.lineTo(350, 50);
+                } else {
+                    ctx.moveTo(50, h - 50);
+                    ctx.lineTo(100, 50);
+                    ctx.lineTo(150, h - 70);
+                    ctx.lineTo(200, 20);
+                    ctx.lineTo(250, h - 70);
+                    ctx.lineTo(300, 50);
+                    ctx.lineTo(350, h - 50);
+                }
+            } else {
+                drawGenericTrend(ctx, patternName.includes('Bullish') || patternName.includes('buy') ? 'buy' : 'sell', canvas);
+                return;
+            }
+
+            ctx.stroke();
+        }
+
+        function drawGenericTrend(ctx, signal, canvas) {
+            const w = canvas.width;
+            const h = canvas.height;
+
+            ctx.beginPath();
+            
+            if (signal === 'buy') {
+                // Upward trend
+                ctx.moveTo(50, h - 40);
+                ctx.lineTo(100, h - 60);
+                ctx.lineTo(150, h - 50);
+                ctx.lineTo(200, h - 90);
+                ctx.lineTo(250, h - 80);
+                ctx.lineTo(300, h - 120);
+                ctx.lineTo(350, h - 140);
+            } else if (signal === 'sell') {
+                // Downward trend
+                ctx.moveTo(50, 40);
+                ctx.lineTo(100, 60);
+                ctx.lineTo(150, 50);
+                ctx.lineTo(200, 90);
+                ctx.lineTo(250, 80);
+                ctx.lineTo(300, 120);
+                ctx.lineTo(350, 140);
+            } else {
+                // Sideways
+                ctx.moveTo(50, h / 2);
+                ctx.lineTo(150, h / 2 - 20);
+                ctx.lineTo(250, h / 2 + 20);
+                ctx.lineTo(350, h / 2);
+            }
+
+            ctx.stroke();
+        }
+    </script>
 </body>
 </html>
